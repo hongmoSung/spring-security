@@ -4,12 +4,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
+
 @Controller
 public class SampleController {
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("message", "hello Spring security");
+    public String index(Model model, Principal principal) {
+        if(principal == null) {
+            model.addAttribute("message", "hello Spring security");
+        } else {
+            model.addAttribute("message", principal.getName());
+        }
         return "index";
     }
 
