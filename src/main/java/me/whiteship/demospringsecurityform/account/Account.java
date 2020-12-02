@@ -1,5 +1,7 @@
 package me.whiteship.demospringsecurityform.account;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +50,7 @@ public class Account {
         this.role = role;
     }
 
-    public void setEncodePassword() {
-        this.setPassword("{noop}" + this.password);
+    public void setEncodePassword(PasswordEncoder passwordEncoder) {
+        this.setPassword(passwordEncoder.encode(this.password));
     }
 }
