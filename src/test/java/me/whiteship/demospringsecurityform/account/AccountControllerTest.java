@@ -10,7 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,5 +59,10 @@ class AccountControllerTest {
         mockMvc.perform(get("/admin"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void loginForm() throws Exception {
+        mockMvc.perform(formLogin().user("hongmo").password("123")).andExpect(authenticated());
     }
 }
