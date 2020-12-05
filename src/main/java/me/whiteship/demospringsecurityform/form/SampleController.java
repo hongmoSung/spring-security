@@ -40,6 +40,12 @@ public class SampleController {
         return "admin";
     }
 
+    @GetMapping("/user")
+    public String user(Model model) {
+        model.addAttribute("message", "hello user security");
+        return "user";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
         AccountContext.setAccountThreadLocal(accountRepository.findByUsername(principal.getName()));
