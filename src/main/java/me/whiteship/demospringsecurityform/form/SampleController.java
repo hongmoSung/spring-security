@@ -1,5 +1,7 @@
 package me.whiteship.demospringsecurityform.form;
 
+import me.whiteship.demospringsecurityform.account.AccountContext;
+import me.whiteship.demospringsecurityform.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,9 @@ public class SampleController {
 
     @Autowired
     private SampleService sampleService;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
@@ -36,7 +41,8 @@ public class SampleController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, Principal principal) {
+        AccountContext.setAccountThreadLocal(accountRepository.findByUsername(principal.getName()));
         sampleService.dashboard();
         model.addAttribute("message", "hello dashboard security");
         return "dashboard";
