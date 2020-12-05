@@ -23,7 +23,7 @@ public class SampleController {
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
-        if(principal == null) {
+        if (principal == null) {
             model.addAttribute("message", "hello Spring security");
         } else {
             model.addAttribute("message", principal.getName());
@@ -65,5 +65,14 @@ public class SampleController {
             SecurityLogger.log("Callable");
             return "asyncHandler";
         };
+    }
+
+    @GetMapping("/async-service")
+    @ResponseBody
+    public String asyncService() {
+        SecurityLogger.log("MVC, before async service");
+        sampleService.asyncService();
+        SecurityLogger.log("MVC, after async service");
+        return "Async Service";
     }
 }
