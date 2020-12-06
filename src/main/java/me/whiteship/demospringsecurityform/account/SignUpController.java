@@ -22,7 +22,6 @@ public class SignUpController {
 
     @PostMapping
     public String processSignUp(@ModelAttribute Account account) {
-        System.out.println(account.toString());
         account.setRole("USER");
         accountService.save(account);
         return "redirect:/";
