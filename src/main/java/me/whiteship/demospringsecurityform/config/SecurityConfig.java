@@ -4,12 +4,14 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 
@@ -62,6 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .changeSessionId()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false);
+
+        http.exceptionHandling()
+                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+                    UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    String username = userDetails.getUsername();
+                    System.out.println(username + " is denied to access " + httpServletRequest.getRequestURL());
+                    httpServletResponse.sendRedirect("/access-denied");
+                });
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
