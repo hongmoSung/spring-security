@@ -40,18 +40,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
                 .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 .mvcMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated()
                 .accessDecisionManager(accessDecisionManager());
+
         http.formLogin()
                 .loginPage("/login")
                 .permitAll();
 
         http.httpBasic();
-        http.logout().logoutSuccessUrl("/");
+
+        http.logout().
+                logoutSuccessUrl("/");
+
+        http.sessionManagement()
+                .sessionFixation()
+                .changeSessionId()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false);
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
